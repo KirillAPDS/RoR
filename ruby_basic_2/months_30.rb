@@ -26,7 +26,14 @@ puts "В этих месяцах ровно по 30 дней: "
 
 # цикл для выделения 30-дневных месяцев
   months.each do |month, days|
-	if days == 30
-	  puts month
-    end
-  end
+    puts month if days == 30
+	end
+
+
+  # months.each do |month, days|
+	# if days == 30
+	#   puts month
+  #   end
+  # end
+
+  
