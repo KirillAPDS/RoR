@@ -26,27 +26,27 @@ puts "Вводите названия товаров, их цены и коли�
   
 # до ввода слова 'стоп' заполняем корзину товаров 
   loop do
-	puts "Введите название товара: "
-	product = gets.chomp
-	break if product == "стоп"
+	 puts "Введите название товара: "
+	 product = gets.chomp
+	 break if product == "стоп"
 
-	puts "Введите цену товара: "
-	price = gets.chomp.to_f
+	 puts "Введите цену товара: "
+	 price = gets.chomp.to_f
 
-	puts "Введите количество товара: "
-	quantity = gets.chomp.to_f
+	 puts "Введите количество товара: "
+	 quantity = gets.chomp.to_f
 
-	basket[product] = {price => quantity}
+	 basket[product] = {price => quantity}
   end
 
 puts "\nВаша корзина:"
 
 # обрабатываем данные из корзины (считаем цену каждого товара и итоговую сумму)
-basket.each do |product, price|
-  puts "#{product}, #{price}"
-  puts "Цена за #{product} составляет #{(price.keys.first * price.values.first).round(2)}"
-  total_sum += price.keys.first * price.values.first
-end
+  basket.each do |product, price|
+    puts "#{product}, #{price}"
+    puts "Цена за #{product} составляет #{(price.keys.first * price.values.first).round(2)}"
+    total_sum += price.keys.first * price.values.first
+  end
 
 puts "Итоговая сумма всех покупок в корзине: #{(total_sum).round(2)}"
  
