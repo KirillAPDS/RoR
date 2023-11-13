@@ -21,30 +21,30 @@
 
 class Train
 
-  attr_accessor :station
-  attr_accessor :speed
-  attr_accessor :count_of_vans
-  attr_accessor :route
-
-  attr_reader :number
-  attr_reader :type
+  attr_accessor :station, :speed, :count_of_vans
+  attr_reader :route, :number, :type
   
 # начальные значения  
-  def initialize(number, type, count_of_vans)
+  def initialize(number, type, vans)
     @number = number
     @type = type
-    @count_of_vans = count_of_vans
+    @vans = vans
     @speed = 0
+  end
+
+  def type
+    return @type
   end
 
 # набор скорости
   def gain_speed(speed)
-    self.speed = speed
+    self.speed += speed
   end
 
 # возвращение текущей скорости
   def speed
-    self.speed = @speed
+    return @speed
+    # self.speed = @speed
   end
 
 # сброс скорости до нуля
@@ -53,14 +53,14 @@ class Train
   end
 
 # возвращение количества вагонов
-  def count_of_vans
-    self.count_of_vans = @count_of_vans
+  def vans
+    return @vans
   end
 
 # прицепка вагона
   def add_van
-    if @speed == 0
-      self.count_of_vans += 1
+    if self.speed == 0
+      @vans += 1
     else
       puts "Сначала остановите поезд"
     end
@@ -68,8 +68,8 @@ class Train
 
 # отцепка вагона
   def delete_van
-    if @speed == 0
-      self.count_of_vans -= 1
+    if self.speed == 0
+      @vans -= 1
     else
       puts "Сначала остановите поезд"
     end
