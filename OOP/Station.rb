@@ -13,8 +13,8 @@
 =end
 
 class Station
-  # attr_reader :name
-  # attr_reader :trains
+  attr_reader :name
+  attr_reader :trains
 
   def initialize(name)
     @name = name
@@ -33,20 +33,17 @@ class Station
     else
       puts "Сейчас на станции эти поезда:"
       puts trains
-        # trains.each do |train|
-        #   puts train
-        # end
     end
   end
 
 # список поездов на станции по типу в текущий момент
-  def trains_list_by_type(type)
-    trains.each do |train|
-      if train.type == type
-        puts train
-      else
-        puts "Поездов типа #{type} сейчас на станции нет"
-      end
+  def trains_type(type)
+    type_count = @trains.count { |train| train.type == type }
+    if type_count > 0
+      puts "Количество поездов типа #{type} на станции #{@name}: #{type_count}"
+      puts @trains.select { |train| train.type == type }
+    else 
+      puts "На станции #{@name} сейчас нет поездов типа #{type}"
     end
   end
 
@@ -56,3 +53,21 @@ class Station
      trains.delete(train)
   end
 end
+
+
+=begin
+  # trains.each do |train|
+        #   puts train
+
+# trains.select { |train| train.include? type }
+
+
+
+    # trains.each do |train|
+    #   if train.type == type
+    #     puts train
+    #   else
+    #     puts "Поездов типа #{type} сейчас на станции нет"
+    #   end
+    # end
+=end

@@ -11,8 +11,7 @@
 =end
 
 class Route
-
-  # attr_reader :stations
+  attr_reader :stations
 
   def initialize(start_station, destination)
     @stations = []
@@ -35,5 +34,4 @@ class Route
     puts "Список станций от начальной до конечной: "
     puts stations
   end
-
 end
