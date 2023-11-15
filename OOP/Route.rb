@@ -13,13 +13,11 @@
 class Route
   attr_reader :stations
 
-  def initialize(start_station, destination)
-    @stations = []
-    @stations << start_station
-    @stations << destination
+  def initialize(start_station, end_station)
+    @stations = [start_station, end_station]
   end
 
-# добавление станции на передпоследнее место в списке (индекс равен -2)
+# добавление станции на передпоследнее место
   def add_station(station)
     stations.insert(-2, station)
   end
@@ -27,11 +25,5 @@ class Route
 # удаление станции
   def delete_station(station)
     stations.delete(station)
-  end
-
-# вывод списка всех станций
-  def stations_list
-    puts "Список станций от начальной до конечной: "
-    puts stations
   end
 end

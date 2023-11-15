@@ -20,90 +20,94 @@
 =end
 
 class Train
-
-  attr_accessor :station, :speed, :count_of_vans
-  attr_reader :route, :number, :type
+  attr_accessor :speed
+  attr_reader :route, :number, :type, :vagons
   
-# начальные значения  
-  def initialize(number, type, vans)
+  def initialize(number, type, vagons)
     @number = number
     @type = type
-    @vans = vans
+    @vagons = vagons
     @speed = 0
   end
 
-  def type
-    return @type
-  end
-
-# набор скорости
-  def gain_speed(speed)
-    self.speed += speed
-  end
-
-# возвращение текущей скорости
-  def speed
-    return @speed
-    # self.speed = @speed
-  end
-
-# сброс скорости до нуля
-  def stop
-    self.speed = 0
-  end
-
-# возвращение количества вагонов
-  def vans
-    return @vans
-  end
-
 # прицепка вагона
-  def add_van
-    if self.speed == 0
-      @vans += 1
-    else
-      puts "Сначала остановите поезд"
-    end
+  def add_vagons
+    @vagons += 1 if @speed == 0
   end
 
 # отцепка вагона
-  def delete_van
-    if self.speed == 0
-      @vans -= 1
-    else
-      puts "Сначала остановите поезд"
-    end
+  def delete_vagons
+    @vagons -= 1 if @speed == 0
   end
 
 # прием маршрута следования
   def route=(route)
     @route = route
-    self.station = self.route.stations.first
+    @current_station_index = 0
   end
 
-# перемещение на одну станцию вперёд
-  def move_next_station
-    self.station = self.route.stations[self.route.stations.index(self.station) + 1]
-  end
-
-# перемещение на одну станцию назад
-  def move_back_station
-    self.station = self.route.stations[self.route.stations.index(self.station) - 1]
-  end
-
-# предыдущая станция
-  def previous_station
-    self.route.stations[self.route.stations.index(self.station) - 1]
-  end
-
-# текущая станция
   def current_station
-    self.route.stations[self.route.stations.index(self.station)]
+    route.stations[@current_station_index]
   end
 
 # следующая станция
   def next_station
-    self.route.stations[self.route.stations.index(self.station) + 1]
+    route.stations[@current_station_index + 1]
   end
 
+# предыдущая станция
+  def previous_station
+    route.stations[@current_station_index - 1]
+  end
+
+# перемещение на одну станцию вперёд
+  def go_next_station
+    @current_station_index += 1
+    @current_station = route.stations[@current_station_index]
+  end
+
+# перемещение на одну станцию назад
+  def go_previous_station
+    @current_station_index -= 1
+    @current_station = route.stations[@current_station_index]
+  end
 end
+
+
+=begin
+
+# возвращение количества вагонов
+  # def vagons
+  #   @vagons
+  # end
+  
+# возвращение текущей скорости
+  # def speed
+  #   return @speed
+  #   # self.speed = @speed
+  # end
+
+  # def type
+  #   return @type
+  # end
+
+  # else
+    #   puts "Сначала остановите поезд"
+    # end
+
+  # текущая станция
+  # def current_station
+  #   route.stations[route.stations.index(station)]
+  # end
+
+  # набор скорости
+  # def gain_speed(speed)
+  #   @speed += speed
+  # end
+
+  # сброс скорости до нуля
+  def stop
+    @speed = 0
+  end
+
+=end

@@ -13,44 +13,26 @@
 =end
 
 class Station
-  attr_reader :name
-  attr_reader :trains
+  attr_reader :name, :trains
 
   def initialize(name)
     @name = name
     @trains = []
   end
 
-# добавление одного поезда
-  def get_train(train)
-    trains << train
+# добавление поезда
+  def add_train(train)
+    @trains << train
   end
 
-# список всех поездов на станции в текущий момент
-  def trains_list
-    if trains.size == 0
-      puts "Сейчас на станции #{@name} поездов нет"
-    else
-      puts "Сейчас на станции эти поезда:"
-      puts trains
-    end
-  end
-
-# список поездов на станции по типу в текущий момент
-  def trains_type(type)
-    type_count = @trains.count { |train| train.type == type }
-    if type_count > 0
-      puts "Количество поездов типа #{type} на станции #{@name}: #{type_count}"
-      puts @trains.select { |train| train.type == type }
-    else 
-      puts "На станции #{@name} сейчас нет поездов типа #{type}"
-    end
+# количество поездов на станции по типу
+  def trains_by_type(type)
+    @trains.count{ |train| train.type == type }
   end
 
 # отправление поезда
   def send_train(train)
-    puts "Отправили этот поезд: #{train}"
-     trains.delete(train)
+     @trains.delete(train)
   end
 end
 
@@ -61,8 +43,6 @@ end
 
 # trains.select { |train| train.include? type }
 
-
-
     # trains.each do |train|
     #   if train.type == type
     #     puts train
@@ -70,4 +50,23 @@ end
     #     puts "Поездов типа #{type} сейчас на станции нет"
     #   end
     # end
+
+
+    # список всех поездов на станции в текущий момент
+  # def trains_list
+  #   if trains.size == 0
+  #     puts "Сейчас на станции #{@name} поездов нет"
+  #   else
+  #     puts "Сейчас на станции эти поезда:"
+  #     puts trains
+  #   end
+  # end
+
+  if type_count > 0
+      puts "Количество поездов типа #{type} на станции #{@name}: #{type_count}"
+      
+      type_count = @trains.count { |train| train.type == type }
+
+      else 
+      puts "На станции #{@name} сейчас нет поездов типа #{type}"
 =end
