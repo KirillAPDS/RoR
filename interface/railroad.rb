@@ -302,7 +302,7 @@ end
 def choice_station
   if check_stations
     puts "Выберите индекс станции"
-    stations.each_with_index { |station, index| puts "Индекс #{index}. #{station}" }
+    stations.each_with_index { |station, index| puts "#{index}. #{station}" }
     @choice_station_index = gets.chomp.to_i
   else no_stations
   end
