@@ -1,20 +1,21 @@
-class Train
+class Train 
   attr_accessor :speed
   attr_reader :route, :number, :type, :vagons
   
-  def initialize(number, type, vagons)
+  def initialize(number, type)
     @number = number
     @type = type
-    @vagons = vagons
+    @vagons = []
     @speed = 0
+    @route = nil
   end
 
-  def add_vagons
-    @vagons += 1 if @speed == 0
+  def add_vagons(vagon)
+    @vagons << vagon if @speed == 0 && vagon.type == type
   end
 
-  def delete_vagons
-    @vagons -= 1 if @speed == 0
+  def delete_vagons(vagon)
+    @vagons.delete(vagon) if @speed == 0
   end
 
   def route=(route)
@@ -22,36 +23,48 @@ class Train
     @current_station_index = 0
   end
 
-  def current_station
-    route.stations[@current_station_index]
-  end
-
   def next_station
-    route.stations[@current_station_index + 1]
+    @route.stations[@current_station_index + 1]
   end
 
   def previous_station
-    route.stations[@current_station_index - 1]
+    @route.stations[@current_station_index - 1]
   end
 
   def go_next_station
-    @current_station_index += 1
-    @current_station = route.stations[@current_station_index]
+    if route != nil
+      @current_station_index += 1
+      @current_station = route.stations[@current_station_index]
+    else lets_set_route
+    end
   end
 
   def go_previous_station
-    @current_station_index -= 1
-    @current_station = route.stations[@current_station_index]
+    if route != nil
+      @current_station_index -= 1
+      @current_station = route.stations[@current_station_index]
+    else lets_set_route
+    end
+  end
+
+  def current_station
+    if @route == nil
+      @current_station = nil
+    else @current_station = @route.stations[@current_station_index]
+    end
+  end
+
+  def lets_set_route
+    puts "Установите маршрут"
   end
 end
 
+  
 
 
 
 
 
-
-=begin
 
 # возвращение количества вагонов
   # def vagons
@@ -83,8 +96,7 @@ end
   # end
 
   # сброс скорости до нуля
-  def stop
-    @speed = 0
-  end
+  # def stop
+  #   @speed = 0
+  # end
 
-=end
