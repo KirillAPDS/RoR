@@ -1,5 +1,5 @@
-class VagonPassenger
-  def type
-    :passenger
+class VagonPassenger < Vagon
+  def initialize(type = :passenger)
+    super
   end
 end
