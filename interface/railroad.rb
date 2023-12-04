@@ -148,216 +148,216 @@ class RailRoad
     end
   end
 end
-
 # это внутренние методы класса для вызова через текстовое меню, поэтому private
-private
+  private
 
-attr_writer :stations, :trains, :vagons, :routes
+  attr_writer :stations, :trains, :vagons, :routes
 
-def create_station
-  enter_station_name
-  stations << @station if stations.none?(@station)
-end
-
-def create_train
-  puts "Введите номер поезда"
-  train_number = gets.chomp.to_i
-  puts "Введите 1, если поезд пассажирский или 2, если поезд грузовой"
-  train_type = gets.chomp.to_i
-  
-  return trains << TrainPassenger.new(train_number) if train_type == 1
-  trains << TrainCargo.new(train_number)
-end
-
-def create_vagon
-  puts "Введите 1, если хотите создать пассажирский или 2, если хотите создать грузовой вагон"
-  type_vagon = gets.chomp.to_i
-
-  return vagons << VagonPassenger.new if type_vagon == 1
-  vagons << VagonCargo.new
-end
-
-def create_route
-  puts "Введите название первой станции"
-  start_station = gets.chomp
-
-  puts "Введите название конечной станции"
-  end_station = gets.chomp
-
-  stations << start_station if stations.none?(start_station)
-  stations << end_station if stations.none?(end_station)
-  routes << Route.new(start_station, end_station)
-
-end
-
-def stations_list
-  if check_stations
-    stations.each_with_index { |station, index| puts "Индекс #{index}. #{station}" }
-  else no_stations
+  def create_station
+    enter_station_name
+    stations << @station if stations.none?(@station)
   end
-end
 
-def trains_list
-  if check_trains
-    trains.each_with_index { |train, index| puts "Индекс #{index}. Номер #{train.number}: #{train.type}. Вагоны: #{train.vagons}. Маршрут: #{train.route}" }
-  else no_trains
+  def create_train
+    puts "Введите номер поезда"
+    train_number = gets.chomp.to_i
+    puts "Введите 1, если поезд пассажирский или 2, если поезд грузовой"
+    train_type = gets.chomp.to_i
+    
+    return trains << TrainPassenger.new(train_number) if train_type == 1
+    trains << TrainCargo.new(train_number)
   end
-end
 
-def trains_list_on_station
-  if choice_station
+  def create_vagon
+    puts "Введите 1, если хотите создать пассажирский или 2, если хотите создать грузовой вагон"
+    type_vagon = gets.chomp.to_i
+
+    return vagons << VagonPassenger.new if type_vagon == 1
+    vagons << VagonCargo.new
+  end
+
+  def create_route
+    puts "Введите название первой станции"
+    start_station = gets.chomp
+
+    puts "Введите название конечной станции"
+    end_station = gets.chomp
+
+    stations << start_station if stations.none?(start_station)
+    stations << end_station if stations.none?(end_station)
+    routes << Route.new(start_station, end_station)
+
+  end
+
+  def stations_list
+    if check_stations
+      stations.each_with_index { |station, index| puts "Индекс #{index}. #{station}" }
+    else no_stations
+    end
+  end
+
+  def trains_list
     if check_trains
-      trains.each { |train| puts "Номер #{train.number}: #{train.type}" if train.current_station.eql?(stations[@choice_station_index]) }
+      trains.each_with_index { |train, index| puts "Индекс #{index}. Номер #{train.number}: #{train.type}. Вагоны: #{train.vagons}. Маршрут: #{train.route}" }
     else no_trains
     end
   end
-end
 
-def vagons_list
-  if check_vagons
-    vagons.each_with_index { |vagon, index| puts "Индекс #{index}. #{vagon}: #{vagon.type}" }
-  else no_vagons
+  def trains_list_on_station
+    if choice_station
+      if check_trains
+        trains.each { |train| puts "Номер #{train.number}: #{train.type}" if train.current_station.eql?(stations[@choice_station_index]) }
+      else no_trains
+      end
+    end
   end
-end
 
-def routes_list
-  if check_routes
-    routes.each_with_index { |route, index| puts "Индекс #{index}. #{route.stations}" }
-  else no_routes
+  def vagons_list
+    if check_vagons
+      vagons.each_with_index { |vagon, index| puts "Индекс #{index}. #{vagon}: #{vagon.type}" }
+    else no_vagons
+    end
   end
-end
 
-def add_station
-  if choice_route
-    enter_station_name
-    stations << @station if stations.none?(@station)
-    routes[@choice_route_index].add_station(@station)
+  def routes_list
+    if check_routes
+      routes.each_with_index { |route, index| puts "Индекс #{index}. #{route.stations}" }
+    else no_routes
+    end
   end
-end
 
-def delete_station
-  if choice_route
-    enter_station_name
-    routes[@choice_route_index].delete_station(@station)
-  end
-end
-
-def set_route
-  if choice_train
+  def add_station
     if choice_route
-      trains[@choice_train_index].route=routes[@choice_route_index]
+      enter_station_name
+      stations << @station if stations.none?(@station)
+      routes[@choice_route_index].add_station(@station)
+    end
+  end
+
+  def delete_station
+    if choice_route
+      enter_station_name
+      routes[@choice_route_index].delete_station(@station)
+    end
+  end
+
+  def set_route
+    if choice_train
+      if choice_route
+        trains[@choice_train_index].route=routes[@choice_route_index]
+        puts "Текущая станция: #{trains[@choice_train_index].current_station}"
+      end
+    end
+  end
+
+  def add_vagon
+    if choice_train
+      if choice_vagon
+        trains[@choice_train_index].add_vagons(vagons[@choice_vagon_index])
+      end
+    end
+  end
+
+  def delete_vagon
+    if choice_train
+      if choice_vagon
+        trains[@choice_train_index].delete_vagons(vagons[@choice_vagon_index])
+      end
+    end
+  end
+
+  def go_next_station
+    if choice_train
+      trains[@choice_train_index].go_next_station
       puts "Текущая станция: #{trains[@choice_train_index].current_station}"
+    else lets_set_route
     end
   end
-end
 
-def add_vagon
-  if choice_train
-    if choice_vagon
-      trains[@choice_train_index].add_vagons(vagons[@choice_vagon_index])
+  def go_previous_station
+    if choice_train
+      trains[@choice_train_index].go_previous_station
+      puts "Текущая станция: #{trains[@choice_train_index].current_station}"
+    else lets_set_route
     end
   end
-end
 
-def delete_vagon
-  if choice_train
-    if choice_vagon
-      trains[@choice_train_index].delete_vagons(vagons[@choice_vagon_index])
+  def check_stations
+    return stations.size > 0
+  end
+
+  def check_trains
+    return trains.size > 0
+  end
+
+  def check_routes
+    return routes.size > 0
+  end
+
+  def check_vagons
+    return vagons.size > 0
+  end
+
+  def choice_station
+    if check_stations
+      puts "Выберите индекс станции"
+      stations.each_with_index { |station, index| puts "#{index}. #{station}" }
+      @choice_station_index = gets.chomp.to_i
+    else no_stations
     end
   end
-end
 
-def go_next_station
-  if choice_train
-    trains[@choice_train_index].go_next_station
-    puts "Текущая станция: #{trains[@choice_train_index].current_station}"
-  else lets_set_route
+  def choice_train
+    if check_trains
+      puts "Выберите индекс поезда"
+      trains.each_with_index { |train, index| puts "#{index}. #{train.number}: #{train.type}" }
+      @choice_train_index = gets.chomp.to_i
+    else no_trains
+    end
   end
-end
 
-def go_previous_station
-  if choice_train
-    trains[@choice_train_index].go_previous_station
-    puts "Текущая станция: #{trains[@choice_train_index].current_station}"
-  else lets_set_route
+  def choice_vagon
+    if check_vagons
+      puts "Выберите индекс вагона"
+      vagons.each_with_index { |vagon, index| puts "#{index}. #{vagon}" }
+      @choice_vagon_index = gets.chomp.to_i
+    else no_vagons
+    end
   end
-end
 
-def check_stations
-  return stations.size > 0
-end
-
-def check_trains
-  return trains.size > 0
-end
-
-def check_routes
-  return routes.size > 0
-end
-
-def check_vagons
-  return vagons.size > 0
-end
-
-def choice_station
-  if check_stations
-    puts "Выберите индекс станции"
-    stations.each_with_index { |station, index| puts "#{index}. #{station}" }
-    @choice_station_index = gets.chomp.to_i
-  else no_stations
+  def choice_route
+    if check_routes
+      puts "Выберите индекс маршрута"
+      routes.each_with_index { |route, index| puts "#{index}. #{route.stations}" }
+      @choice_route_index = gets.chomp.to_i
+    else no_routes
+    end
   end
-end
 
-def choice_train
-  if check_trains
-    puts "Выберите индекс поезда"
-    trains.each_with_index { |train, index| puts "#{index}. #{train.number}: #{train.type}" }
-    @choice_train_index = gets.chomp.to_i
-  else no_trains
+  def enter_station_name
+    puts "Введите название станции"
+    @station = gets.chomp
   end
-end
 
-def choice_vagon
-  if check_vagons
-    puts "Выберите индекс вагона"
-    vagons.each_with_index { |vagon, index| puts "#{index}. #{vagon}" }
-    @choice_vagon_index = gets.chomp.to_i
-  else no_vagons
+  def no_stations
+    puts "Список станций пуст"
   end
-end
 
-def choice_route
-  if check_routes
-    puts "Выберите индекс маршрута"
-    routes.each_with_index { |route, index| puts "#{index}. #{route.stations}" }
-    @choice_route_index = gets.chomp.to_i
-  else no_routes
+  def no_trains
+    puts "Поездов пока нет"
   end
-end
 
-def enter_station_name
-  puts "Введите название станции"
-  @station = gets.chomp
-end
+  def no_vagons
+    puts "Вагонов пока нет"
+  end
 
-def no_stations
-  puts "Список станций пуст"
-end
+  def no_routes
+    puts "Маршрутов пока нет"
+  end
 
-def no_trains
-  puts "Поездов пока нет"
-end
+  def lets_set_route
+    puts "Установите маршрут"
+  end
 
-def no_vagons
-  puts "Вагонов пока нет"
-end
+  end
 
-def no_routes
-  puts "Маршрутов пока нет"
-end
-
-def lets_set_route
-  puts "Установите маршрут"
-end
-
-end

@@ -1,7 +1,7 @@
 class Vagon
   attr_reader :type
 
-  def initialize(type)
-    @type = type
+  def initialize
+    
   end
 end
