@@ -1,4 +1,10 @@
-class Train 
+require_relative 'modules/company_name.rb'
+require_relative 'modules/instance_counter.rb'
+
+class Train
+  include CompanyName
+  include InstanceCounter
+
   attr_accessor :speed
   attr_reader :route, :number, :type, :vagons
   
@@ -8,6 +14,13 @@ class Train
     @vagons = []
     @speed = 0
     @route = nil
+    register_instance
+  end
+
+  @@trains = {}
+
+  def self.find(number)
+    @@trains[number]
   end
 
   def add_vagons(vagon)
