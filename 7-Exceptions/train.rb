@@ -75,16 +75,16 @@ class Train
     end
   end
 
-  def lets_set_route
-    puts "Установите маршрут"
-  end
-
   protected
 
   def validate!
     raise RuntimeError, NUMBER_ERROR if number !~ TRAIN_NUMBER_FORMAT
     raise TypeError, TYPE_ERROR if type !~ TYPES
     puts "#{@type} поезд создан"
+  end
+
+  def lets_set_route
+    puts "Установите маршрут"
   end
 end
 

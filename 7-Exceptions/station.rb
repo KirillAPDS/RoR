@@ -3,12 +3,15 @@ require_relative 'modules/instance_counter.rb'
 class Station
   include InstanceCounter
   
-  attr_reader :name, :trains
+  attr_reader :trains
+  attr_accessor :name
 
   @@stations = []
+  NAME_ERROR = "Name can't be nil"
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
     register_instance
   end
@@ -26,7 +29,12 @@ class Station
   end
 
   def send_train(train)
-     @trains.delete(train)
+    @trains.delete(train)
+  end
+
+  def validate!
+    raise RuntimeError, NAME_ERROR if @name.empty?
+    puts "Станция #{@station} создана"
   end
 end
 
