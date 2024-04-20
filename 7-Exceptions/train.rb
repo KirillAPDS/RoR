@@ -11,6 +11,7 @@ class Train
   attr_reader :route, :vagons
 
   TRAIN_NUMBER_FORMAT = /^[a-z0-9]{3}-*[a-z0-9]{2}$/i
+  TYPES = /^cargo$|^passenger$/i
   NUMBER_ERROR = 'Invalid train number'
   TYPE_ERROR = 'Type error'
 
@@ -82,7 +83,7 @@ class Train
 
   def validate!
     raise RuntimeError, NUMBER_ERROR if number !~ TRAIN_NUMBER_FORMAT
-    raise TypeError, TYPE_ERROR if type !~ /^cargo$|^passenger$/
+    raise TypeError, TYPE_ERROR if type !~ TYPES
     puts "#{@type} поезд создан"
   end
 end

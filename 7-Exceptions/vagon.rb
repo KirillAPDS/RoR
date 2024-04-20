@@ -7,6 +7,7 @@ class Vagon
 
   attr_accessor :type
 
+  TYPES = /^cargo$|^passenger$/i
   TYPE_ERROR = 'Type error'
 
   def initialize(type)
@@ -17,7 +18,7 @@ class Vagon
   protected
 
   def validate!
-    raise TypeError, TYPE_ERROR if type !~ /^cargo$|^passenger$/
+    raise TypeError, TYPE_ERROR if type !~ TYPES
     puts "#{type} вагон создан"
   end
 end
