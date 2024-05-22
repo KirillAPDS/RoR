@@ -3,11 +3,13 @@ class Vagon
   include Validation
   include Msgs
 
-  attr_accessor :company_name, :number, :space, :reserved, :type
+  attr_accessor :company_name, :number, :space, :reserved
+  attr_reader :type
 
-  def initialize(number, type)
+  def initialize(number, type, space)
     @number = number
     @type = type
+    @space = space
     @reserved = 0
     validate!
   end
@@ -30,12 +32,6 @@ class Vagon
   def validate!
     raise RuntimeError, NUMBER_ERROR if !Integer(@number, exception: false)
     raise TypeError, TYPE_ERROR if type !~ TYPES
-    space_input
-    raise TypeError, NUMBER_ERROR if !Integer(@space, exception: false)
-  end
-
-  def space_input
-    puts "Введите количество мест / объём"
-    @space = gets.chomp.to_i
+    raise RuntimeError, SPACE_ERROR if !Integer(@space, exception: false)
   end
 end

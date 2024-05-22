@@ -36,17 +36,18 @@ class Station
     block.call
   end
 
-  def trains_block(train)
+  def trains_block
     puts "На станции #{self.name} следующие поезда:"
     puts "Поезда:"
-    @trains.each { |train| puts "Номер поезда: #{train.number}. Тип: #{train.type}. Количество вагонов: #{train.vagons}." if train.current_station == self} 
+    @trains.each { |train| puts "Номер поезда: #{train.number}. Тип: #{train.type}. Количество вагонов: #{train.vagons}." } 
     puts
   end
 
   protected
 
   def validate!
-    raise RuntimeError, NAME_ERROR if @name.empty?
+    raise NameError, NAME_ERROR if name.nil? || name.length.zero?
+    raise NameError, ITEM_ALREADY_EXISTS if @@stations.any? { |station| station.name == name }
   end
 
   def trains_on_station_validate!

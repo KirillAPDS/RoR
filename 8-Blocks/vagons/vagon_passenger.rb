@@ -1,6 +1,6 @@
 class VagonPassenger < Vagon
 
-  def initialize(number, type = :passenger)
+  def initialize(number, type = :passenger, space)
     super
     validate_passenger!
   end
@@ -15,6 +15,21 @@ class VagonPassenger < Vagon
     raise TypeError, TYPE_ERROR if type !~ /^passenger$/
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #  attr_accessor :seats
 # seats_input

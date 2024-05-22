@@ -1,5 +1,3 @@
-require_relative 'modules/instance_counter.rb'
-
 class Route
   include InstanceCounter
 
@@ -19,5 +17,4 @@ class Route
   def delete_station(station)
     @stations.delete(station)
   end
-
 end
