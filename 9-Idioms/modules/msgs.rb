@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+module Msgs
+  # format
+  TRAIN_NUMBER_FORMAT = /^[a-z0-9]{3}-*[a-z0-9]{2}$/i.freeze
+  TYPES = /^cargo$|^passenger$/i.freeze
+
+  # errors_msgs
+  NAME_ERROR = 'Name error'
+  NUMBER_ERROR = 'Number error'
+  TYPE_ERROR = 'Type error'
+  INPUT_ERROR = 'Input error'
+  SPACE_ERROR = 'Space error'
+
+  # stuff_msgs
+  ITEM_ALREADY_EXISTS = 'This item is already exists'
+  NO_FREE_SPACE = 'No free space'
+  NO_TRAINS_ERROR = 'No trains on station'
+end
