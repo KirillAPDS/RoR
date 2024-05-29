@@ -170,26 +170,27 @@ class Main
   end
 
   def add_station
-    # return unless choice_item(routes)
-    route = routes[choice_item(routes)]
+    return unless choice_item(routes)
+
+    route = routes[@item_index]
     station_name_input
     stations << Station.new(@station) if stations.none?(@station)
-    # route = routes[@item_index]
     route.add_station(@station)
   end
 
   def delete_station
-    # return unless choice_item(routes)
+    return unless choice_item(routes)
 
-    # route = routes[@item_index]
-    route = routes[choice_item(routes)]
+    route = routes[@item_index]
     station_name_input
     route.delete_station(@station)
   end
 
   def assign_route
-    train = trains[choice_item(trains)]
-    route = routes[choice_item(routes)]
+    return unless choice_item(trains) && choice_item(routes)
+
+    train = trains[@item_index]
+    route = routes[@item_index]
     train.route = route
     current_station
     station = train.current_station
@@ -197,16 +198,20 @@ class Main
   end
 
   def add_vagon
-    train = trains[choice_item(trains)]
-    vagon = vagons[choice_item(vagons)]
+    return unless choice_item(trains) && choice_item(vagons)
+
+    train = trains[@item_index]
+    vagon = vagons[@item_index]
     train.add_vagons(vagon)
   rescue RuntimeError => e
     puts e.message
   end
 
   def delete_vagon
-    train = trains[choice_item(trains)]
-    vagon = vagons[choice_item(vagons)]
+    return unless choice_item(trains) && choice_item(vagons)
+
+    train = trains[@item_index]
+    vagon = vagons[@item_index]
     train.delete_vagons(vagon)
   rescue RuntimeError => e
     puts e.message
