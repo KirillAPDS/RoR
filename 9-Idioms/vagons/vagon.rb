@@ -5,13 +5,12 @@ class Vagon
   include Validation
   include Msgs
 
-  attr_accessor :company_name, :number, :space, :reserved
-  attr_reader :type
+  attr_accessor :company_name, :number, :space, :reserved, :type
 
-  def initialize(number, type, space)
+  def initialize(number, space, type)
     @number = number
-    @type = type
     @space = space
+    @type = type
     @reserved = 0
     validate!
   end
@@ -21,8 +20,7 @@ class Vagon
       puts 'Нет свободного места'
     else
       @reserved += space
-      puts 'Успешный резерв.'
-      info
+      puts "Успешный резерв. #{info}"
     end
   end
 
@@ -31,14 +29,14 @@ class Vagon
   end
 
   def info
-    "Номер: #{number}. Тип: #{type}. Свободно: #{available_space}. Занято: #{@reserved}"
+    "Номер вагона: #{number}. Тип: #{type}. Свободно: #{available_space}. Занято: #{@reserved}"
   end
 
   protected
 
   def validate!
-    raise NUMBER_ERROR.to_s unless Integer(@number, exception: false)
+    raise NUMBER_ERROR unless Integer(@number, exception: false)
+    raise SPACE_ERROR unless Integer(@space, exception: false)
     raise TypeError, TYPE_ERROR if type !~ TYPES
-    raise SPACE_ERROR.to_s unless Integer(@space, exception: false)
   end
 end

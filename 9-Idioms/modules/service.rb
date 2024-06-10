@@ -6,7 +6,7 @@ module Service
   end
 
   def vagon_valid?
-    Vagon.new(@vagon_number, @vagon_type, @space).valid?
+    Vagon.new(@vagon_number, @space, @vagon_type).valid?
   end
 
   def trains_with_vagons
@@ -19,8 +19,8 @@ module Service
 
   def create_vagon_input
     vagon_number_input
-    vagon_type_input
     space_input
+    vagon_type_input
   end
 
   def choice_item(items)
@@ -30,23 +30,45 @@ module Service
     @item_index = gets.chomp.to_i
   end
 
+  def items_valid?(items)
+    raise "No items" if items.empty?
+  end
+
   def items_list(items)
-    if items.size.positive?
-      items.each_with_index { |item, index| puts "#{index}. #{item.info}" }
-    else
-      no_items
-    end
+    items_valid?(items)
+    items.each_with_index { |item, index| puts "#{index}. #{item.info}" }
+  rescue RuntimeError => e
+    puts e.message
+    try_again
   end
 
-  def buy_ticket
-    puts "Свободно мест: #{vagons[@item_index].available_space}"
-    vagons[@item_index].take_space
+  def stations_list
+    raise "No stations" if stations.empty?
+    items_list(stations)
+  rescue RuntimeError => e
+    puts e.message
   end
 
-  def take_volume
-    puts "Доступный объём: #{vagons[@item_index].available_space}"
+  def trains_list
+    raise "No trains" if trains.empty?
+    items_list(trains)
+  rescue RuntimeError => e
+    puts e.message
+  end
+
+  def show_menu(heading, menu)
+    puts heading
+    menu.each.with_index(1) { |item, index| puts "#{index}. #{item}" }
+    puts '0. Выход'
+  end
+
+  def buy_ticket(vagon)
+    vagon.take_space
+  end
+
+  def take_volume(vagon)
     need_volume_input
-    vagons[@item_index].take_space(@vol)
+    vagon.take_space(@vol)
   end
 
   def space_input
@@ -127,10 +149,6 @@ module Service
     puts 'Недостаточно станций'
   end
 
-  def no_items
-    puts 'Нет объектов'
-  end
-
   def set_a_route
     puts 'Установите маршрут'
   end
@@ -140,93 +158,6 @@ module Service
   end
 
   def select_item_index
-    puts 'Выберите индекс объекта'
+    puts 'Выберите индекс'
   end
 end
-
-# def select_station_index
-#   puts 'Выберите индекс станции'
-# end
-
-# def select_train_index
-#   puts 'Выберите индекс поезда'
-# end
-
-# def select_vagon_index
-#   puts 'Выберите индекс вагона'
-# end
-
-# def select_route_index
-#   puts 'Выберите индекс маршрута'
-# end
-
-# def no_stations
-#   puts 'Список станций пуст'
-# end
-
-# def no_trains
-#   puts 'Поездов пока нет'
-# end
-
-# def no_vagons
-#   puts 'Вагонов пока нет'
-# end
-
-# def no_routes
-#   puts 'Маршрутов пока нет'
-# end
-
-# def choice_item(items)
-#   if items.size.positive?
-#     select_item_index
-#     items.each_with_index { |item, index| puts "#{index}. #{item.info}" }
-#     @item_index = gets.chomp.to_i
-#   else
-#     no_items
-#   end
-# end
-
-# def choice_station
-#   if check_array(stations)
-#     select_station_index
-#     stations.each_with_index { |station, index| puts "#{index}. #{station.name}" }
-#     @choice_station_index = gets.chomp.to_i
-#   else
-#     no_stations
-#   end
-# end
-
-# def choice_train
-#   if trains.size.positive?
-#     # if check_array(trains)
-#     select_train_index
-#     trains.each_with_index { |train, index| puts "#{index}. #{train.number}: #{train.type}" }
-#     @choice_train_index = gets.chomp.to_i
-#   else
-#     no_trains
-#   end
-# end
-
-# def choice_vagon
-#   if check_array(vagons)
-#     select_vagon_index
-#     vagons.each_with_index { |vagon, index| puts "#{index}. #{vagon.number}: #{vagon.type}" }
-#     @choice_vagon_index = gets.chomp.to_i
-#   else
-#     no_vagons
-#   end
-# end
-
-# def choice_route
-#   if check_array(routes)
-#     select_route_index
-#     routes.each_with_index { |route, index| puts "#{index}. #{route.stations}" }
-#     @choice_route_index = gets.chomp.to_i
-#   else
-#     no_routes
-#   end
-# end
-
-# def check_array(arr)
-#   arr.size.positive?
-# end

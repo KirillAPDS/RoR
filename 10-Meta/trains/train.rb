@@ -3,15 +3,25 @@
 class Train
   include CompanyName
   include InstanceCounter
-  include Validation
   include Msgs
+  include Validation
+  extend Accessors
 
-  attr_accessor :speed, :number, :type
+  attr_accessor :company_name, :speed, :number, :type
   attr_reader :route, :vagons
 
   @@trains = []
 
-  def initialize(number, type)
+  validate :company_name, :presence
+  validate :number, :presence
+  validate :type, :presence
+
+  validate :company_name, :format, NAME_FORMAT
+  validate :number, :format, TRAIN_NUMBER_FORMAT
+  validate :type, :format, TYPES
+
+  def initialize(company_name, number, type)
+    @company_name = company_name
     @number = number
     @type = type
     validate!
@@ -90,19 +100,15 @@ class Train
 
   protected
 
-  def validate!
-    raise NUMBER_ERROR.to_s if number !~ TRAIN_NUMBER_FORMAT
-    raise TypeError, TYPE_ERROR if type !~ TYPES
-  end
-
-  def add_vagons_validate!(vagon)
-    raise ITEM_ALREADY_EXISTS.to_s if vagons.include?(vagon)
-  end
-
   def lets_set_route
     puts 'Установите маршрут'
   end
 end
+
+
+
+
+
 
 # def current_station
 #   @current_station = if @route.nil?
@@ -111,3 +117,12 @@ end
 #                        @route.stations[@current_station_index]
 #                      end
 # end
+
+# def validate!
+  #   raise NUMBER_ERROR.to_s if number !~ TRAIN_NUMBER_FORMAT
+  #   raise TypeError, TYPE_ERROR if type !~ TYPES
+  # end
+
+  # def add_vagons_validate!(vagon)
+  #   raise ITEM_ALREADY_EXISTS.to_s if vagons.include?(vagon)
+  # end

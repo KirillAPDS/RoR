@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'modules/accessors'
+require_relative 'modules/validation'
 require_relative 'modules/company_name'
 require_relative 'modules/instance_counter'
-require_relative 'modules/validation'
 require_relative 'modules/service'
 require_relative 'modules/msgs'
 require_relative 'modules/menu'
@@ -60,8 +61,8 @@ class Main
     loop do
       show_menu('Информация:', INFO_MENU)
       case gets.chomp
-      when '1' then stations_list #items_list(stations)
-      when '2' then trains_list #items_list(trains)
+      when '1' then items_list(stations)
+      when '2' then items_list(trains)
       when '3' then stations_with_trains
       when '4' then items_list(vagons)
       when '5' then trains_with_vagons
@@ -77,11 +78,12 @@ class Main
       show_menu('Операции:', OPERATION_MENU)
       case gets.chomp
       when '1' then assign_route
-      when '2' then add_or_delete_vagon
-      when '3' then go_train
-      when '4' then add_station
-      when '5' then delete_station
-      when '6' then reserve
+      when '2' then add_vagon
+      when '3' then delete_vagon
+      when '4' then go_train
+      when '5' then add_station
+      when '6' then delete_station
+      when '7' then reserve
       when '0' then return
       else input_error
       end
@@ -92,47 +94,62 @@ class Main
 
   attr_writer :stations, :trains, :vagons, :routes
 
+  def show_menu(heading, menu)
+    puts heading
+    show_arr(menu)
+    puts '0. Выход'
+  end
+
+  def show_arr(arr)
+    arr.each.with_index(1) { |item, index| puts "#{index}. #{item}" }
+  end
+
   def create_station
     station_name_input
     @stations << Station.new(@station)
     station_created
-  rescue NameError => e
+  rescue NameError, RuntimeError => e
     puts e.message
-    try_again
-    retry
   end
 
+  # def create_train
+  #   create_train_input
+  #   if train_valid?
+  #     case @train_type
+  #     when 'cargo' then @trains << TrainCargo.new(@train_number)
+  #     when 'passenger' then @trains << TrainPassenger.new(@train_number)
+  #     else try_again
+  #     end
+  #     train_created
+  #   end
+  # rescue RuntimeError, TypeError => e
+  #   puts e.message
+  #   # try_again
+  #   # retry
+  # end
+
   def create_train
-    train_number_input
-    train_type_input
-    if train_valid?
+    create_train_input
       case @train_type
-      when 'cargo' then @trains << TrainCargo.new(@train_number)
-      when 'passenger' then @trains << TrainPassenger.new(@train_number)
+      when 'cargo' then @trains << TrainCargo.new(@company_name, @train_number)
+      when 'passenger' then @trains << TrainPassenger.new(@company_name, @train_number)
       else try_again
       end
       train_created
-    end
   rescue RuntimeError, TypeError => e
     puts e.message
-    try_again
-    retry
   end
 
   def create_vagon
     create_vagon_input
-    if vagon_valid?
       case @vagon_type
-      when 'cargo' then @vagons << VagonCargo.new(@vagon_number, @space)
-      when 'passenger' then @vagons << VagonPassenger.new(@vagon_number, @space)
+      when 'cargo' then @vagons << VagonCargo.new(@company_name, @vagon_number, @space)
+      when 'passenger' then @vagons << VagonPassenger.new(@company_name, @vagon_number, @space)
       else try_again
       end
       vagon_created
-    end
   rescue RuntimeError, TypeError => e
     puts e.message
-    try_again
-    retry
   end
 
   def create_route
@@ -152,28 +169,11 @@ class Main
   end
 
   def reserve
-    return unless choice_item(vagons)
-
-    vagon = vagons[@item_index]
-    puts "Свободно: #{vagon.available_space}"
-    case vagon
-    when VagonPassenger then buy_ticket(vagon)
-    when VagonCargo then take_volume(vagon)
+    case vagons[choice_item(vagons)]
+    when VagonPassenger then buy_ticket
+    when VagonCargo then take_volume
     end
   end
-
-  # def change_route
-  #   return unless choice_item(routes) && choice_item(stations)
-
-  #   route = routes[@item_index]
-  #   station = stations[@item_index]
-  #   # station_name_input
-  #   puts '1 - Добавить станцию или 2 - Удалить станцию?'
-  #   case gets.chomp.to_i
-  #   when 1 then route.add_station(station)
-  #   when 2 then route.delete_station(station)
-  #   end
-  # end
 
   def add_station
     return unless choice_item(routes)
@@ -203,16 +203,22 @@ class Main
     station.add_train(train)
   end
 
-  def add_or_delete_vagon
+  def add_vagon
     return unless choice_item(trains) && choice_item(vagons)
 
     train = trains[@item_index]
     vagon = vagons[@item_index]
-    puts '1 - Добавить вагон или 2 - Удалить вагон?'
-    case gets.chomp.to_i
-    when 1 then train.add_vagons(vagon)
-    when 2 then train.delete_vagons(vagon)
-    end
+    train.add_vagons(vagon)
+  rescue RuntimeError => e
+    puts e.message
+  end
+
+  def delete_vagon
+    return unless choice_item(trains) && choice_item(vagons)
+
+    train = trains[@item_index]
+    vagon = vagons[@item_index]
+    train.delete_vagons(vagon)
   rescue RuntimeError => e
     puts e.message
   end
@@ -221,19 +227,17 @@ class Main
     if choice_item(trains)
       train = trains[@item_index]
       train.current_station.send_train(train)
-      go_train_choice(train)
+      puts '1 - Вперёд или 2 - Назад?'
+      @choice = gets.chomp.to_i
+      if @choice == 1
+        train.go_next_station
+      elsif @choice == 2
+        train.go_previous_station
+      end
       train.current_station.add_train(train)
       current_station
     else
       set_a_route
-    end
-  end
-
-  def go_train_choice(train)
-    puts '1 - Вперёд или 2 - Назад?'
-    case gets.chomp.to_i
-    when 1 then train.go_next_station
-    when 2 then train.go_previous_station
     end
   end
 end
@@ -260,24 +264,4 @@ end
 #   else
 #     set_a_route
 #   end
-# end
-
-# def add_vagon
-#   return unless choice_item(trains) && choice_item(vagons)
-
-#   train = trains[@item_index]
-#   vagon = vagons[@item_index]
-#   train.add_vagons(vagon)
-# rescue RuntimeError => e
-#   puts e.message
-# end
-
-# def delete_vagon
-#   return unless choice_item(trains) && choice_item(vagons)
-
-#   train = trains[@item_index]
-#   vagon = vagons[@item_index]
-#   train.delete_vagons(vagon)
-# rescue RuntimeError => e
-#   puts e.message
 # end
