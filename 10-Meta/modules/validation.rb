@@ -4,6 +4,8 @@ module Validation
   
   NAME_FORMAT = /\A[а-я|\w|\W]{2,}\z/i.freeze
   TRAIN_NUMBER_FORMAT = /^[a-z0-9]{3}-*[a-z0-9]{2}$/i.freeze
+  VAGON_NUMBER_FORMAT = /^[0-9]{2,}$/
+  TYPES = /^cargo$|^passenger$/i.freeze
 
   def self.included(base)
     base.extend ClassValidation
@@ -45,11 +47,11 @@ module Validation
     end
 
     def format(value, format)
-      raise 'Format error' unless format.match?(value.to_s)
+      raise 'Format error' if value !~ format #unless format.match?(value.to_s)
     end
 
-    def type(value, type)
-      raise 'Type error' unless value.is_a?(type)
+    def type_format(value, type_format)
+      raise 'Type error' if value !~ type_format #unless value.is_a?(type)
     end
 
     # def same(value, item)

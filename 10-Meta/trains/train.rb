@@ -7,33 +7,34 @@ class Train
   include Validation
   extend Accessors
 
-  attr_accessor :company_name, :speed, :number, :type
-  attr_reader :route, :vagons
+  # attr_accessor 
+  attr_reader :name, :speed, :number, :type, :route, :vagons
 
   @@trains = []
 
-  validate :company_name, :presence
-  validate :number, :presence
-  validate :type, :presence
+  def self.find(number)
+    @@trains[number]
+  end
 
-  validate :company_name, :format, NAME_FORMAT
+  # validate :number, :presence
+  # validate :type, :presence
+  # validate :name, :format, NAME_FORMAT
+
+  validate :name, :presence
   validate :number, :format, TRAIN_NUMBER_FORMAT
-  validate :type, :format, TYPES
+  validate :type, :type_format, TYPES
 
-  def initialize(company_name, number, type)
-    @company_name = company_name
+  def initialize(name, number, type)
+    @name = name
     @number = number
     @type = type
     validate!
+    same_validate!
     @vagons = []
     @speed = 0
     @route = nil
     @@trains << self
     register_instance
-  end
-
-  def self.find(number)
-    @@trains[number]
   end
 
   def add_vagons(vagon)
@@ -99,6 +100,10 @@ class Train
   end
 
   protected
+
+  def same_validate!
+    raise NameError, ITEM_ALREADY_EXISTS if @@trains.any? { |train| train.number == number }
+  end
 
   def lets_set_route
     puts 'Установите маршрут'

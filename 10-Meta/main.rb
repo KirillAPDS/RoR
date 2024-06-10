@@ -112,6 +112,18 @@ class Main
     puts e.message
   end
 
+  def create_train
+    create_train_input
+      # case @train_type
+    @trains << Train.new(@company_name, @train_number, @train_type)
+      # when 'passenger' then @trains << TrainPassenger.new(@company_name, @train_number)
+      # else try_again
+      # end
+    train_created
+  rescue RuntimeError, TypeError, NameError => e
+    puts e.message
+  end
+
   # def create_train
   #   create_train_input
   #   if train_valid?
@@ -128,26 +140,16 @@ class Main
   #   # retry
   # end
 
-  def create_train
-    create_train_input
-      case @train_type
-      when 'cargo' then @trains << TrainCargo.new(@company_name, @train_number)
-      when 'passenger' then @trains << TrainPassenger.new(@company_name, @train_number)
-      else try_again
-      end
-      train_created
-  rescue RuntimeError, TypeError => e
-    puts e.message
-  end
+  
 
   def create_vagon
     create_vagon_input
-      case @vagon_type
-      when 'cargo' then @vagons << VagonCargo.new(@company_name, @vagon_number, @space)
-      when 'passenger' then @vagons << VagonPassenger.new(@company_name, @vagon_number, @space)
-      else try_again
-      end
-      vagon_created
+      # case @vagon_type
+    @vagons << Vagon.new(@company_name, @vagon_number, @vagon_type, @space)
+      # when 'passenger' then @vagons << VagonPassenger.new(@company_name, @vagon_number, @space)
+      # else try_again
+      # end
+    vagon_created
   rescue RuntimeError, TypeError => e
     puts e.message
   end
@@ -168,10 +170,17 @@ class Main
     end
   end
 
+  # def reserve
+  #   case vagons[choice_item(vagons)]
+  #   when VagonPassenger then buy_ticket
+  #   when VagonCargo then take_volume
+  #   end
+  # end
+
   def reserve
-    case vagons[choice_item(vagons)]
-    when VagonPassenger then buy_ticket
-    when VagonCargo then take_volume
+    case vagons[choice_item(vagons)].type
+    when 'passenger' then buy_ticket
+    when 'cargo' then take_volume
     end
   end
 

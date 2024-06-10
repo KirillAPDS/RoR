@@ -2,28 +2,33 @@
 
 class Vagon
   include CompanyName
+  include InstanceCounter
   include Msgs
   include Validation
   extend Accessors
 
-  attr_accessor :company_name, :number, :space, :reserved
+  attr_accessor :name, :number, :space, :reserved
   attr_reader :type
 
-  validate :company_name, :presence
-  validate :number, :presence
-  validate :type, :presence
+  @@vagons = []
+  
+  # validate :number, :presence
+  # validate :type, :presence
+  # validate :number, :format, VAGON_NUMBER_FORMAT
 
-  validate :company_name, :format, NAME_FORMAT
+  validate :name, :presence
   validate :number, :format, VAGON_NUMBER_FORMAT
-  validate :type, :format, TYPES
+  validate :type, :type_format, TYPES
 
-  def initialize(company_name, number, type, space)
-    @company_name = company_name
+  def initialize(name, number, type, space)
+    @name = name
     @number = number
     @type = type
+    validate!
     @space = space
     @reserved = 0
-    validate!
+    @@vagons << self
+    register_instance
   end
 
   def take_space(space)
@@ -31,8 +36,7 @@ class Vagon
       puts 'Нет свободного места'
     else
       @reserved += space
-      puts 'Успешный резерв.'
-      info
+      puts "Успешный резерв. Свободно: #{available_space}. Занято: #{@reserved}"
     end
   end
 

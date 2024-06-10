@@ -115,11 +115,6 @@ module Service
     @vagon_type = gets.chomp.to_s
   end
 
-  def company_name_input
-    puts 'Введите название компании-производителя'
-    @company_name = gets.chomp.to_s
-  end
-
   def first_station_input
     puts 'Введите название первой станции'
     @start_station = gets.chomp
