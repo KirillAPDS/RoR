@@ -87,7 +87,7 @@ module Service
 
   def station_name_input
     puts 'Введите название станции'
-    @station = gets.chomp
+    @station = STDIN.gets.chomp
   end
 
   def company_name_input

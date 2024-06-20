@@ -102,7 +102,7 @@ class Train
   protected
 
   def same_validate!
-    raise NameError, ITEM_ALREADY_EXISTS if @@trains.any? { |train| train.number == number }
+    raise NameError, ITEM_ALREADY_EXISTS if @@trains.any? { |train| train.number == number && train.type == type}
   end
 
   def lets_set_route
